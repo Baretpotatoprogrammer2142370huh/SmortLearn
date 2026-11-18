@@ -5,62 +5,136 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Trening</title>
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#457b9d">
+<meta name="theme-color" content="#F72585">
 <link rel="icon" href="icon-192.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
-:root{--main:#457b9d;--bg:#f4f6fb;--card:#ffffff;--text:#1d3557;--size:16px}
-body.dark{--bg:#1b1f2a;--card:#262c3a;--text:#e8ecf5}
+:root{
+  --y:#FFD93D; --g:#9FE2BF; --sky:#4CC9F0; --pink:#F72585; --purple:#7209B7; --deep:#3A0CA3;
+  --ink:#2a1450; --card:rgba(255,255,255,.88); --txt:#2a1450; --font:'Poppins',Arial,sans-serif;
+}
+body.dark{ --card:rgba(35,22,70,.9); --txt:#f5eaff; --ink:#f5eaff; }
 *{box-sizing:border-box}
-body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);font-size:var(--size);min-height:100vh;transition:background .3s,color .3s}
-body.noanim *{transition:none!important;animation:none!important}
+body{margin:0;min-height:100vh;color:var(--txt);font-family:var(--font);font-size:16px;
+  background:linear-gradient(135deg,#fff6b8 0%,#b9f5d0 45%,#bdeeff 100%) fixed;transition:background .4s,color .4s}
+body.dark{background:linear-gradient(135deg,#2a1450 0%,#1b3a4b 50%,#3a0ca3 100%) fixed}
+body.noanim *,body.noanim *::before,body.noanim *::after{animation:none!important;transition:none!important}
 .hidden{display:none!important}
-#login{display:flex;align-items:center;justify-content:center;min-height:100vh}
-.box{background:var(--card);padding:30px;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.12);width:min(92vw,360px);text-align:center;animation:pop .4s ease}
-@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
-@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-#app{max-width:960px;margin:0 auto;padding:16px}
-nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-nav button{flex:1}
-button{background:var(--main);color:#fff;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:1em;transition:transform .15s,opacity .15s}
-button:hover{transform:translateY(-1px);opacity:.92}
-button:disabled{opacity:.4;cursor:default}
-button.sec{background:transparent;color:var(--text);border:2px solid var(--main)}
-button.danger{background:#c0392b}
-input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #bbb;font-size:1em;background:var(--card);color:var(--text);margin:6px 0 12px}
-textarea{min-height:200px;font-family:monospace}
-.card{background:var(--card);border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);animation:fade .35s ease}
-.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.muted{opacity:.7;font-size:.9em}
-.ok{color:#2a9d8f;font-weight:bold}
-.bad{color:#e63946;font-weight:bold}
-.task{white-space:pre-wrap;line-height:1.5;font-size:1.05em}
-.wyj{white-space:pre-wrap;line-height:1.5}
-label{font-weight:bold;display:block}
+h1,h2,h3{margin:.2em 0;font-weight:800}
+.grad-text{background:linear-gradient(90deg,var(--pink),var(--purple),var(--sky));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+/* tła */
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.55;z-index:-1;animation:float 12s ease-in-out infinite alternate}
+.b1{width:340px;height:340px;background:var(--y);top:-80px;left:-60px}
+.b2{width:300px;height:300px;background:var(--pink);bottom:-60px;right:-40px;animation-delay:-4s}
+.b3{width:260px;height:260px;background:var(--sky);top:40%;left:45%;animation-delay:-8s}
+@keyframes float{to{transform:translate(40px,30px) scale(1.1)}}
+
+/* przyciski */
+.btn{font-family:inherit;font-weight:700;font-size:1.05em;padding:14px 22px;border-radius:18px;border:3px solid var(--purple);
+  background:linear-gradient(135deg,var(--y),var(--g));color:var(--ink);cursor:pointer;box-shadow:0 6px 0 var(--purple);
+  transition:transform .15s,box-shadow .15s,filter .2s;position:relative;overflow:hidden;display:inline-block;text-decoration:none}
+.btn:hover{transform:translateY(-3px);box-shadow:0 9px 0 var(--purple);filter:brightness(1.05)}
+.btn:active{transform:translateY(4px);box-shadow:0 2px 0 var(--purple)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:0 6px 0 #999;border-color:#999}
+.btn.alt{background:linear-gradient(135deg,var(--sky),var(--purple));color:#fff}
+.btn.pink{background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;border-color:var(--deep)}
+.btn.ghost{background:#fff;color:var(--purple);border-color:var(--pink)}
+.btn.small{padding:8px 14px;font-size:.9em;border-radius:12px;box-shadow:0 4px 0 var(--purple)}
+.btn::after{content:"";position:absolute;top:0;left:-75%;width:50%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,.6),transparent);transform:skewX(-20deg)}
+.btn:hover::after{animation:shine .8s}
+@keyframes shine{to{left:130%}}
+
+/* pola */
+input,select,textarea{font-family:inherit;font-size:1em;width:100%;padding:14px;border-radius:14px;border:3px solid var(--sky);
+  background:#fff;color:#2a1450;margin:6px 0 14px;outline:none;transition:border .2s,box-shadow .2s}
+input:focus,select:focus,textarea:focus{border-color:var(--pink);box-shadow:0 0 0 5px rgba(247,37,133,.2)}
+textarea{min-height:220px;font-family:Consolas,monospace;font-size:.95em}
+label{font-weight:700;display:block;margin-top:8px}
+
+/* karty */
+.card{background:var(--card);backdrop-filter:blur(8px);border-radius:24px;padding:24px;margin-bottom:18px;
+  border:3px solid var(--pink);box-shadow:0 12px 30px rgba(114,9,183,.18);animation:slideUp .5s cubic-bezier(.2,.8,.2,1)}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.pop{animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.shake{animation:shake .5s}
+@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+.course{cursor:pointer;transition:transform .2s,box-shadow .2s}
+.course:hover{transform:translateY(-6px) rotate(-.5deg);box-shadow:0 18px 40px rgba(247,37,133,.3)}
+.emoji{font-size:2.4em;line-height:1}
+.muted{opacity:.7;font-size:.92em}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.between{justify-content:space-between}
+.ok{color:#14906e;font-weight:800}
+.bad{color:var(--pink);font-weight:800}
+.chip{background:#fff;border:3px solid var(--sky);border-radius:99px;padding:8px 16px;font-weight:700;color:var(--purple);display:inline-block}
+
+/* pasek postępu */
+.bar{height:18px;background:rgba(114,9,183,.15);border-radius:99px;overflow:hidden;margin:10px 0}
+.bar>i{display:block;height:100%;width:var(--w,0%);background:linear-gradient(90deg,var(--y),var(--g),var(--sky));border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1);position:relative}
+.bar>i::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(255,255,255,.7),transparent);animation:sheen 2s infinite}
+@keyframes sheen{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+
+/* nagłówek i menu */
+.top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:18px}
+.stats{display:flex;gap:10px;flex-wrap:wrap}
+nav{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+nav .btn{flex:1;min-width:140px;text-align:center}
+
+/* podpowiedź, wyjaśnienie, zadanie */
+.hint{background:linear-gradient(135deg,#fff3a6,#d9fbe9);border-left:8px solid var(--y);border-radius:16px;padding:14px 18px;margin-top:14px;white-space:pre-wrap;line-height:1.6;color:#2a1450}
+.expl{background:linear-gradient(135deg,#d9f7ff,#f0d9ff);border-left:8px solid var(--pink);border-radius:16px;padding:16px 18px;margin-top:14px;white-space:pre-wrap;line-height:1.6;color:#2a1450}
+.task{font-size:1.15em;line-height:1.7;white-space:pre-wrap;padding:18px;border-radius:18px;margin:12px 0;background:linear-gradient(135deg,rgba(255,217,61,.25),rgba(159,226,191,.25))}
+.result{margin-top:14px;font-size:1.1em}
+
+/* konfetti */
+.conf{position:fixed;top:-20px;width:10px;height:14px;z-index:99;animation:fall linear forwards;border-radius:2px}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* logowanie */
+#login{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+#login .card{width:min(92vw,400px);text-align:center}
+.logo{font-size:4em;animation:bounce 2s infinite}
+@keyframes bounce{50%{transform:translateY(-12px) rotate(-6deg)}}
+
+#app{max-width:1040px;margin:0 auto;padding:20px}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--pink),var(--purple));color:#fff;padding:14px 24px;border-radius:99px;font-weight:700;z-index:100;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:pop .4s}
 </style>
 </head>
 <body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 
 <div id="login">
-  <div class="box">
-    <h2>Trening</h2>
+  <div class="card">
+    <div class="logo">📚</div>
+    <h1 class="grad-text">Trening</h1>
+    <p class="muted">Wpisz hasło, żeby wejść</p>
     <input type="password" id="pass" placeholder="Hasło" onkeydown="if(event.key==='Enter')zaloguj()">
-    <button onclick="zaloguj()" style="width:100%">Wejdź</button>
-    <p id="passErr" class="bad hidden">Złe hasło</p>
+    <button class="btn" style="width:100%" onclick="zaloguj()">Wejdź 🚀</button>
+    <p id="passErr" class="bad hidden">Złe hasło, spróbuj ponownie</p>
   </div>
 </div>
 
 <div id="app" class="hidden">
+  <div class="top">
+    <h1 class="grad-text">📚 Trening</h1>
+    <div class="stats">
+      <span class="chip">⭐ <span id="ptsChip">0</span> pkt</span>
+      <span class="chip">🔥 seria: <span id="streakChip">0</span></span>
+    </div>
+  </div>
   <nav>
-    <button onclick="go('kursy')">Moje kursy</button>
-    <button onclick="go('historia')">Historia</button>
-    <button onclick="go('ustawienia')">Ustawienia</button>
-    <button class="sec" onclick="location.reload()">Wyloguj</button>
+    <button class="btn" onclick="go('kursy')">📘 Moje kursy</button>
+    <button class="btn alt" onclick="go('historia')">🕒 Historia</button>
+    <button class="btn pink" onclick="go('ustawienia')">⚙️ Ustawienia</button>
   </nav>
   <div id="view"></div>
 </div>
 
 <script>
-// ====== HASŁO: zmień na własne ======
+// ===== HASŁO: zmień na własne =====
 const HASLO = "matura2026";
 
 const PRZEDMIOTY = {
@@ -69,127 +143,169 @@ const PRZEDMIOTY = {
   "Język polski": ["Lektury","Wypracowanie","Gramatyka","Interpretacja tekstu","Środki stylistyczne"],
   "Informatyka": ["Algorytmy","Python","Bazy danych","Systemy operacyjne","Sieci komputerowe","HTML i CSS"]
 };
+const IKONY = {"Matematyka":"📐","Język angielski":"🇬🇧","Język polski":"🖋️","Informatyka":"💻"};
 
-const KLUCZ = "trening_dane_v1";
+const KLUCZ = "trening_v2";
 let dane = JSON.parse(localStorage.getItem(KLUCZ) || "null") || {
-  ustawienia: { kolor: "#457b9d", rozmiar: 16, ciemny: false, anim: "pelna" },
-  kursy: [],
-  historia: []
+  ustawienia: { ciemny: false, rozmiar: 16, czcionka: "'Poppins',Arial,sans-serif", anim: true },
+  kursy: [], historia: [], punkty: 0, seria: 0
 };
 let odpowiedziono = false;
+let uzytaPodpowiedz = false;
+let aktualne = { id: null, i: 0 };
 
-function zapisz(){ localStorage.setItem(KLUCZ, JSON.stringify(dane)); }
+function zapisz(){ localStorage.setItem(KLUCZ, JSON.stringify(dane)); odswiezPasek(); }
 function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 function V(h){ document.getElementById("view").innerHTML = h; }
 function kursPo(id){ return dane.kursy.find(k => k.id === id); }
+function procent(k){ return k.zadania.length ? Math.round((k.ok||[]).length / k.zadania.length * 100) : 0; }
+function odswiezPasek(){
+  document.getElementById("ptsChip").textContent = dane.punkty;
+  document.getElementById("streakChip").textContent = dane.seria;
+}
+function toast(tekst){
+  const t = document.createElement("div");
+  t.className = "toast"; t.textContent = tekst;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2200);
+}
+function konfetti(){
+  const kolory = ["#FFD93D","#9FE2BF","#4CC9F0","#F72585","#7209B7"];
+  for (let i = 0; i < 90; i++){
+    const c = document.createElement("div");
+    c.className = "conf";
+    c.style.left = Math.random()*100 + "vw";
+    c.style.background = kolory[i % kolory.length];
+    c.style.animationDuration = (2 + Math.random()*2) + "s";
+    c.style.animationDelay = Math.random()*0.5 + "s";
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4500);
+  }
+}
 
 function zaloguj(){
   if (document.getElementById("pass").value === HASLO){
     document.getElementById("login").classList.add("hidden");
     document.getElementById("app").classList.remove("hidden");
     zastosujUstawienia();
+    odswiezPasek();
     go("kursy");
   } else {
     document.getElementById("passErr").classList.remove("hidden");
+    const karta = document.querySelector("#login .card");
+    karta.classList.add("shake");
+    setTimeout(() => karta.classList.remove("shake"), 500);
   }
 }
 
 function zastosujUstawienia(){
-  const u = dane.ustawienia, r = document.documentElement.style;
-  r.setProperty("--main", u.kolor);
-  r.setProperty("--size", u.rozmiar + "px");
+  const u = dane.ustawienia;
   document.body.classList.toggle("dark", u.ciemny);
-  document.body.classList.toggle("noanim", u.anim === "brak");
+  document.body.classList.toggle("noanim", !u.anim);
+  document.body.style.fontSize = u.rozmiar + "px";
+  document.body.style.fontFamily = u.czcionka;
 }
 
 function go(widok, a, b){
-  ({
-    kursy: () => renderKursy(),
-    nowy: () => renderNowy(),
-    kurs: () => renderKurs(a),
-    dodaj: () => renderDodaj(a),
-    rozwiazuj: () => renderRozwiazuj(a, b || 0),
-    historia: () => renderHistoria(),
-    ustawienia: () => renderUstawienia()
-  })[widok]();
-  window.scrollTo(0, 0);
+  const mapa = {
+    kursy: renderKursy, nowy: renderNowy, kurs: () => renderKurs(a),
+    dodaj: () => renderDodaj(a), rozwiazuj: () => renderRozwiazuj(a, b || 0),
+    historia: renderHistoria, ustawienia: renderUstawienia
+  };
+  mapa[widok]();
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
-// ====== MOJE KURSY ======
+// ===== MOJE KURSY =====
 function renderKursy(){
-  let h = `<div class="row" style="justify-content:space-between">
-    <h2>Moje kursy</h2><button onclick="go('nowy')">+ Nowy kurs</button></div>`;
-  if (!dane.kursy.length) h += `<p class="muted">Nie masz jeszcze kursów. Dodaj pierwszy.</p>`;
+  let h = `<div class="row between" style="margin-bottom:18px">
+    <h2>📘 Moje kursy</h2>
+    <button class="btn" onclick="go('nowy')">＋ Nowy kurs</button></div>`;
+  if (!dane.kursy.length) h += `<div class="card"><p>Nie masz jeszcze kursów. Dodaj pierwszy, np. z matematyki! 🚀</p></div>`;
+  h += `<div class="grid">`;
   dane.kursy.forEach(k => {
-    h += `<div class="card" style="cursor:pointer" onclick="go('kurs','${k.id}')">
-      <b>${esc(k.przedmiot)}</b> – ${esc(k.temat)}
-      <div class="muted">Zadań: ${k.zadania.length}</div></div>`;
+    const p = procent(k);
+    h += `<div class="card course" onclick="go('kurs','${k.id}')">
+      <div class="emoji">${IKONY[k.przedmiot] || "📘"}</div>
+      <h3>${esc(k.temat)}</h3>
+      <div class="muted">${esc(k.przedmiot)} · zadań: ${k.zadania.length}</div>
+      <div class="bar" style="--w:${p}%"><i></i></div>
+      <div class="muted">Postęp: ${p}%</div>
+    </div>`;
   });
+  h += `</div>`;
   V(h);
 }
 
 function renderNowy(){
   const opcje = Object.keys(PRZEDMIOTY).map(p => `<option>${esc(p)}</option>`).join("");
-  V(`<div class="card"><h2>Nowy kurs</h2>
+  V(`<div class="card pop"><h2>✨ Nowy kurs</h2>
     <label>Przedmiot</label>
     <select id="przedm" onchange="odswiezTematy()">${opcje}</select>
     <label>Zagadnienie (wybierz z listy lub wpisz własne)</label>
     <input id="temat" list="tematy" placeholder="np. Pochodna">
     <datalist id="tematy"></datalist>
     <div class="row">
-      <button onclick="zapiszKurs()">Utwórz</button>
-      <button class="sec" onclick="go('kursy')">Anuluj</button>
+      <button class="btn" onclick="zapiszKurs()">Utwórz 🎉</button>
+      <button class="btn ghost" onclick="go('kursy')">Anuluj</button>
     </div></div>`);
   odswiezTematy();
 }
 
 function odswiezTematy(){
   const p = document.getElementById("przedm").value;
-  document.getElementById("tematy").innerHTML =
-    PRZEDMIOTY[p].map(t => `<option value="${esc(t)}">`).join("");
+  document.getElementById("tematy").innerHTML = PRZEDMIOTY[p].map(t => `<option value="${esc(t)}">`).join("");
 }
 
 function zapiszKurs(){
   const p = document.getElementById("przedm").value;
   const t = document.getElementById("temat").value.trim();
-  if (!t) return alert("Wpisz zagadnienie");
-  dane.kursy.push({ id: Date.now().toString(), przedmiot: p, temat: t, zadania: [] });
+  if (!t) return toast("Wpisz zagadnienie ✏️");
+  dane.kursy.push({ id: Date.now().toString(), przedmiot: p, temat: t, zadania: [], ok: [] });
   zapisz();
+  toast("Kurs utworzony ✅");
   go("kursy");
 }
 
 function renderKurs(id){
   const k = kursPo(id);
   if (!k) return go("kursy");
-  V(`<div class="card"><h2>${esc(k.przedmiot)} – ${esc(k.temat)}</h2>
-    <p class="muted">Zadań w kursie: ${k.zadania.length}</p>
-    <div class="row">
-      <button onclick="go('rozwiazuj','${id}',0)" ${k.zadania.length ? "" : "disabled"}>Rozwiązuj zadania</button>
-      <button class="sec" onclick="go('dodaj','${id}')">Dodaj treść</button>
-      <button class="sec" onclick="go('kursy')">Wstecz</button>
-      <button class="danger" onclick="usunKurs('${id}')">Usuń kurs</button>
+  const p = procent(k);
+  V(`<div class="card pop">
+    <div class="row"><div class="emoji">${IKONY[k.przedmiot] || "📘"}</div>
+      <div><h2>${esc(k.temat)}</h2><div class="muted">${esc(k.przedmiot)}</div></div></div>
+    <div class="bar" style="--w:${p}%"><i></i></div>
+    <p class="muted">Opanowane zadania: ${(k.ok||[]).length} z ${k.zadania.length} (${p}%)</p>
+    <div class="row" style="margin-top:16px">
+      <button class="btn" ${k.zadania.length ? "" : "disabled"} onclick="go('rozwiazuj','${id}',0)">🧠 Rozwiązuj zadania</button>
+      <button class="btn alt" onclick="go('dodaj','${id}')">➕ Dodaj treść</button>
+      <button class="btn ghost" onclick="go('kursy')">← Wstecz</button>
+      <button class="btn small pink" onclick="usunKurs('${id}')">🗑️ Usuń kurs</button>
     </div></div>`);
 }
 
 function usunKurs(id){
-  if (!confirm("Usunąć ten kurs?")) return;
+  if (!confirm("Na pewno usunąć ten kurs?")) return;
   dane.kursy = dane.kursy.filter(k => k.id !== id);
   zapisz();
   go("kursy");
 }
 
-// ====== DODAJ TREŚĆ ======
+// ===== DODAJ TREŚĆ =====
+const PRZYKLAD = `[
+  {"tresc": "Oblicz f(4), jeśli f(x) = 2x + 3.", "odpowiedz": "11",
+   "podpowiedz": "Podstaw 4 zamiast x.", "wyjasnienie": "f(4) = 2 · 4 + 3 = 11"},
+  {"tresc": "Ile wynosi 2 + 3 · 4 ?", "odpowiedz": "14",
+   "wyjasnienie": "Najpierw mnożenie: 3·4 = 12, potem 2 + 12 = 14"}
+]`;
+
 function renderDodaj(id){
-  V(`<div class="card"><h2>Dodaj treść</h2>
-    <p class="muted">Wklej zadania w formacie JSON (tablica). Każde zadanie ma tresc, odpowiedz i wyjasnienie:</p>
-    <pre class="muted" style="white-space:pre-wrap">[
-  {"tresc": "Treść zadania", "odpowiedz": "B", "wyjasnienie": "Dlaczego B..."},
-  {"tresc": "Kolejne zadanie", "odpowiedz": "42", "wyjasnienie": "Krok po kroku..."}
-]</pre>
-    <textarea id="json" placeholder="Wklej tutaj"></textarea>
+  V(`<div class="card pop"><h2>➕ Dodaj treść</h2>
+    <p class="muted">Wklej zadania w formacie JSON. Pola: <b>tresc</b> i <b>odpowiedz</b> (wymagane), <b>podpowiedz</b> i <b>wyjasnienie</b> (opcjonalne).</p>
+    <textarea id="json" placeholder="Wklej tutaj">${esc(PRZYKLAD)}</textarea>
     <div class="row">
-      <button onclick="zapiszZadania('${id}')">Zapisz zadania</button>
-      <button class="sec" onclick="go('kurs','${id}')">Wstecz</button>
+      <button class="btn" onclick="zapiszZadania('${id}')">💾 Zapisz zadania</button>
+      <button class="btn ghost" onclick="go('kurs','${id}')">← Wstecz</button>
     </div></div>`);
 }
 
@@ -202,71 +318,134 @@ function zapiszZadania(id){
   const zle = nowe.findIndex(z => !z.tresc || z.odpowiedz === undefined);
   if (zle >= 0) return alert(`Zadanie nr ${zle + 1} nie ma pola "tresc" albo "odpowiedz"`);
   k.zadania.push(...nowe.map(z => ({
-    tresc: z.tresc,
-    odpowiedz: String(z.odpowiedz),
-    wyjasnienie: z.wyjasnienie || ""
+    tresc: z.tresc, odpowiedz: String(z.odpowiedz),
+    podpowiedz: z.podpowiedz || "", wyjasnienie: z.wyjasnienie || ""
   })));
   zapisz();
-  alert(`Dodano ${nowe.length} zadań`);
+  konfetti();
+  toast(`Dodano ${nowe.length} zadań 🎉`);
   go("kurs", id);
 }
 
-// ====== ROZWIĄZYWANIE ======
+// ===== ROZWIĄZYWANIE =====
 function renderRozwiazuj(id, i){
   const k = kursPo(id);
   if (!k || !k.zadania.length) return go("kurs", id);
   if (i >= k.zadania.length){
-    V(`<div class="card"><h2>Koniec kursu!</h2>
-      <p>Rozwiązałeś wszystkie zadania.</p>
-      <button onclick="go('kurs','${id}')">Wróć do kursu</button></div>`);
+    const p = procent(k);
+    V(`<div class="card pop" style="text-align:center">
+      <div class="emoji" style="font-size:4em">🏆</div>
+      <h2 class="grad-text">Koniec kursu!</h2>
+      <p>Opanowałeś <b>${(k.ok||[]).length}</b> z <b>${k.zadania.length}</b> zadań (${p}%).</p>
+      <div class="bar" style="--w:${p}%"><i></i></div>
+      <div class="row" style="justify-content:center;margin-top:16px">
+        <button class="btn" onclick="go('rozwiazuj','${id}',0)">🔁 Od początku</button>
+        <button class="btn ghost" onclick="go('kurs','${id}')">← Wróć do kursu</button>
+      </div></div>`);
+    konfetti();
     return;
   }
   odpowiedziono = false;
-  const z = k.zadania[i];
-  V(`<div class="card">
-    <div class="muted">${esc(k.przedmiot)} – ${esc(k.temat)} · zadanie ${i + 1} z ${k.zadania.length}</div>
-    <div class="task" style="margin:12px 0">${esc(z.tresc)}</div>
-    <input id="odp" placeholder="Twoja odpowiedź">
-    <div class="row">
-      <button onclick="sprawdzOdp('${id}',${i})">Odpowiedz</button>
-      <button class="sec" onclick="document.getElementById('wyj').classList.toggle('hidden')">Wyjaśnienie</button>
-      <button class="sec" onclick="go('rozwiazuj','${id}',${i + 1})">Następne</button>
+  uzytaPodpowiedz = false;
+  aktualne = { id, i };
+  const p = Math.round(i / k.zadania.length * 100);
+  V(`<div class="card pop" id="karta">
+    <div class="row between">
+      <span class="muted">${esc(k.przedmiot)} · ${esc(k.temat)}</span>
+      <span class="chip">Zadanie ${i + 1} / ${k.zadania.length}</span>
     </div>
-    <div id="wynik" style="margin-top:12px"></div>
-    <div id="wyj" class="card hidden wyj" style="margin-top:12px">${esc(z.wyjasnienie || "Brak wyjaśnienia")}</div>
+    <div class="bar" style="--w:${p}%"><i></i></div>
+    <div class="task">${esc(k.zadania[i].tresc)}</div>
+    <input id="odp" placeholder="Twoja odpowiedź (Enter = sprawdź)" onkeydown="klawisz(event,'${id}',${i})" autocomplete="off">
+    <div class="row">
+      <button class="btn" id="btnOdp" onclick="sprawdzOdp('${id}',${i})">✅ Odpowiedz</button>
+      <button class="btn alt" onclick="pokazPodpowiedz()">💡 Podpowiedź</button>
+      <button class="btn pink" onclick="pokazWyjasnienie()">📖 Wyjaśnienie</button>
+      <button class="btn ghost" onclick="go('rozwiazuj','${id}',${i + 1})">Następne ➜</button>
+    </div>
+    <div id="podp"></div>
+    <div id="wynik" class="result"></div>
+    <div id="wyj"></div>
   </div>`);
+  setTimeout(() => document.getElementById("odp").focus(), 50);
+}
+
+function klawisz(e, id, i){
+  if (e.key !== "Enter") return;
+  if (odpowiedziono) go("rozwiazuj", id, i + 1);
+  else sprawdzOdp(id, i);
+}
+
+function pokazPodpowiedz(){
+  const k = kursPo(aktualne.id);
+  const z = k && k.zadania[aktualne.i];
+  if (!z) return;
+  if (!z.podpowiedz) return toast("Brak podpowiedzi do tego zadania 🤷");
+  uzytaPodpowiedz = true;
+  document.getElementById("podp").innerHTML = `<div class="hint pop">💡 ${esc(z.podpowiedz)}</div>`;
+}
+
+function pokazWyjasnienie(){
+  const k = kursPo(aktualne.id);
+  const z = k && k.zadania[aktualne.i];
+  if (!z) return;
+  document.getElementById("wyj").innerHTML = `<div class="expl pop">📖 ${esc(z.wyjasnienie || "Brak wyjaśnienia.")}</div>`;
 }
 
 function sprawdzOdp(id, i){
   if (odpowiedziono) return;
-  odpowiedziono = true;
   const k = kursPo(id), z = k.zadania[i];
   const podana = document.getElementById("odp").value.trim();
+  if (!podana) return toast("Wpisz odpowiedź ✏️");
+  odpowiedziono = true;
   const dobra = podana.toLowerCase() === z.odpowiedz.trim().toLowerCase();
+  const pkt = dobra ? (uzytaPodpowiedz ? 5 : 10) : 0;
 
+  if (dobra){
+    dane.punkty += pkt;
+    dane.seria += 1;
+    if (!k.ok) k.ok = [];
+    if (!k.ok.includes(i)) k.ok.push(i);
+  } else {
+    dane.seria = 0;
+  }
   dane.historia.unshift({
     data: new Date().toLocaleString("pl-PL"),
     przedmiot: k.przedmiot, kurs: k.temat, zadanie: i + 1,
-    podana, poprawna: z.odpowiedz, dobra
+    podana, poprawna: z.odpowiedz, dobra, pkt
   });
   dane.historia = dane.historia.slice(0, 500);
   zapisz();
 
+  document.getElementById("odp").disabled = true;
+  document.getElementById("btnOdp").disabled = true;
   document.getElementById("wynik").innerHTML = dobra
-    ? `<span class="ok">✓ Dobrze!</span>`
-    : `<span class="bad">✗ Nie do końca.</span> Poprawna odpowiedź: <b>${esc(z.odpowiedz)}</b>`;
+    ? `<span class="ok">✓ Świetnie! +${pkt} pkt</span>`
+    : `<span class="bad">✗ Nie tym razem.</span> Poprawna odpowiedź: <b>${esc(z.odpowiedz)}</b>`;
+  const karta = document.getElementById("karta");
+  if (dobra) konfetti();
+  else { karta.classList.add("shake"); setTimeout(() => karta.classList.remove("shake"), 500); }
 }
 
-// ====== HISTORIA ======
+// ===== HISTORIA =====
 function renderHistoria(){
-  let h = `<div class="row" style="justify-content:space-between">
-    <h2>Historia</h2><button class="sec" onclick="wyczyscHistorie()">Wyczyść</button></div>`;
-  if (!dane.historia.length) h += `<p class="muted">Brak historii.</p>`;
+  const ile = dane.historia.length;
+  const dobre = dane.historia.filter(x => x.dobra).length;
+  const proc = ile ? Math.round(dobre / ile * 100) : 0;
+  let h = `<div class="row between" style="margin-bottom:14px">
+    <h2>🕒 Historia</h2>
+    <button class="btn small ghost" onclick="wyczyscHistorie()">Wyczyść</button></div>
+    <div class="card"><div class="row between">
+      <span>Odpowiedzi: <b>${ile}</b></span>
+      <span>Poprawnych: <b>${proc}%</b></span>
+      <span>Punkty: <b>${dane.punkty}</b></span>
+    </div><div class="bar" style="--w:${proc}%"><i></i></div></div>`;
+  if (!ile) h += `<p class="muted">Brak historii. Rozwiąż pierwsze zadanie! 🚀</p>`;
   dane.historia.forEach(x => {
-    h += `<div class="card">
+    h += `<div class="card" style="padding:16px 20px">
       <span class="${x.dobra ? 'ok' : 'bad'}">${x.dobra ? '✓' : '✗'}</span>
-      ${esc(x.przedmiot)} – ${esc(x.kurs)}, zadanie ${x.zadanie}
-      <div class="muted">${esc(x.data)} · Twoja odpowiedź: ${esc(x.podana)} · poprawna: ${esc(x.poprawna)}</div>
+      <b>${esc(x.przedmiot)}</b> · ${esc(x.kurs)} · zadanie ${x.zadanie}
+      <div class="muted">${esc(x.data)} · Twoja: ${esc(x.podana)} · poprawna: ${esc(x.poprawna)}${x.pkt ? ` · +${x.pkt} pkt` : ""}</div>
     </div>`;
   });
   V(h);
@@ -279,38 +458,87 @@ function wyczyscHistorie(){
   renderHistoria();
 }
 
-// ====== USTAWIENIA ======
+// ===== USTAWIENIA =====
 function renderUstawienia(){
   const u = dane.ustawienia;
-  V(`<div class="card"><h2>Ustawienia</h2>
-    <label>Kolor główny</label>
-    <input type="color" id="s_kolor" value="${u.kolor}">
-    <label>Wielkość czcionki: <span id="s_r_val">${u.rozmiar}</span> px</label>
-    <input type="range" id="s_rozmiar" min="12" max="24" value="${u.rozmiar}"
-      oninput="document.getElementById('s_r_val').textContent=this.value">
-    <label><input type="checkbox" id="s_ciemny" ${u.ciemny ? "checked" : ""} style="width:auto"> Ciemny motyw</label>
-    <label>Animacje</label>
-    <select id="s_anim">
-      <option value="pelna" ${u.anim === "pelna" ? "selected" : ""}>Włączone</option>
-      <option value="brak" ${u.anim === "brak" ? "selected" : ""}>Wyłączone</option>
+  V(`<div class="card pop"><h2>⚙️ Ustawienia</h2>
+    <label>Motyw</label>
+    <select id="s_motyw">
+      <option value="jasny" ${!u.ciemny ? "selected" : ""}>☀️ Jasny (żółty, seledyn, błękit)</option>
+      <option value="ciemny" ${u.ciemny ? "selected" : ""}>🌙 Ciemny</option>
     </select>
-    <div class="row"><button onclick="zapiszUstawienia()">Zapisz</button></div>
-  </div>`);
+    <label>Wielkość czcionki: <span id="s_r_val">${u.rozmiar}</span> px</label>
+    <input type="range" id="s_rozmiar" min="13" max="24" value="${u.rozmiar}"
+      oninput="document.getElementById('s_r_val').textContent=this.value">
+    <label>Czcionka</label>
+    <select id="s_czcionka">
+      <option value="'Poppins',Arial,sans-serif" ${u.czcionka.includes("Poppins") ? "selected" : ""}>Poppins (nowoczesna)</option>
+      <option value="'Nunito',Arial,sans-serif" ${u.czcionka.includes("Nunito") ? "selected" : ""}>Nunito (zaokrąglona)</option>
+      <option value="Arial,sans-serif" ${u.czcionka === "Arial,sans-serif" ? "selected" : ""}>Arial (klasyczna)</option>
+    </select>
+    <label><input type="checkbox" id="s_anim" ${u.anim ? "checked" : ""} style="width:auto"> Animacje włączone</label>
+    <div class="row" style="margin-top:18px">
+      <button class="btn" onclick="zapiszUstawienia()">💾 Zapisz</button>
+    </div></div>
+
+    <div class="card"><h3>💾 Kopia zapasowa</h3>
+      <p class="muted">Zapisz wszystkie kursy i historię do pliku albo wczytaj wcześniejszą kopię.</p>
+      <div class="row">
+        <button class="btn alt" onclick="eksport()">⬇️ Eksportuj</button>
+        <label class="btn ghost" style="margin:0;cursor:pointer">⬆️ Importuj
+          <input type="file" accept=".json" onchange="importuj(this)" style="display:none">
+        </label>
+        <button class="btn small pink" onclick="resetuj()">♻️ Resetuj wszystko</button>
+      </div>
+    </div>`);
 }
 
 function zapiszUstawienia(){
   dane.ustawienia = {
-    kolor: document.getElementById("s_kolor").value,
+    ciemny: document.getElementById("s_motyw").value === "ciemny",
     rozmiar: +document.getElementById("s_rozmiar").value,
-    ciemny: document.getElementById("s_ciemny").checked,
-    anim: document.getElementById("s_anim").value
+    czcionka: document.getElementById("s_czcionka").value,
+    anim: document.getElementById("s_anim").checked
   };
   zapisz();
   zastosujUstawienia();
-  alert("Zapisano");
+  toast("Zapisano ✨");
 }
 
-if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js"); }
+function eksport(){
+  const blob = new Blob([JSON.stringify(dane, null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "trening-kopia.json";
+  a.click();
+}
+
+function importuj(input){
+  const plik = input.files[0];
+  if (!plik) return;
+  const czytnik = new FileReader();
+  czytnik.onload = () => {
+    try {
+      const nowe = JSON.parse(czytnik.result);
+      if (!Array.isArray(nowe.kursy)) throw new Error("brak listy kursów");
+      dane = nowe;
+      zapisz();
+      zastosujUstawienia();
+      toast("Kopia wczytana ✅");
+      go("kursy");
+    } catch (e) { alert("Nie udało się wczytać pliku: " + e.message); }
+  };
+  czytnik.readAsText(plik);
+}
+
+function resetuj(){
+  if (!confirm("Na pewno skasować wszystkie kursy i historię?")) return;
+  dane.kursy = []; dane.historia = []; dane.punkty = 0; dane.seria = 0;
+  zapisz();
+  go("kursy");
+}
+
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js");
 </script>
 </body>
 </html>
