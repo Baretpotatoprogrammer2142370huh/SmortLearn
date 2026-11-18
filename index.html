@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trening</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#457b9d">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--main:#457b9d;--bg:#f4f6fb;--card:#ffffff;--text:#1d3557;--size:16px}
+body.dark{--bg:#1b1f2a;--card:#262c3a;--text:#e8ecf5}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:var(--text);font-size:var(--size);min-height:100vh;transition:background .3s,color .3s}
+body.noanim *{transition:none!important;animation:none!important}
+.hidden{display:none!important}
+#login{display:flex;align-items:center;justify-content:center;min-height:100vh}
+.box{background:var(--card);padding:30px;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.12);width:min(92vw,360px);text-align:center;animation:pop .4s ease}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#app{max-width:960px;margin:0 auto;padding:16px}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+nav button{flex:1}
+button{background:var(--main);color:#fff;border:0;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:1em;transition:transform .15s,opacity .15s}
+button:hover{transform:translateY(-1px);opacity:.92}
+button:disabled{opacity:.4;cursor:default}
+button.sec{background:transparent;color:var(--text);border:2px solid var(--main)}
+button.danger{background:#c0392b}
+input,select,textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #bbb;font-size:1em;background:var(--card);color:var(--text);margin:6px 0 12px}
+textarea{min-height:200px;font-family:monospace}
+.card{background:var(--card);border-radius:12px;padding:18px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,.08);animation:fade .35s ease}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.muted{opacity:.7;font-size:.9em}
+.ok{color:#2a9d8f;font-weight:bold}
+.bad{color:#e63946;font-weight:bold}
+.task{white-space:pre-wrap;line-height:1.5;font-size:1.05em}
+.wyj{white-space:pre-wrap;line-height:1.5}
+label{font-weight:bold;display:block}
+</style>
+</head>
+<body>
+
+<div id="login">
+  <div class="box">
+    <h2>Trening</h2>
+    <input type="password" id="pass" placeholder="Hasło" onkeydown="if(event.key==='Enter')zaloguj()">
+    <button onclick="zaloguj()" style="width:100%">Wejdź</button>
+    <p id="passErr" class="bad hidden">Złe hasło</p>
+  </div>
+</div>
+
+<div id="app" class="hidden">
+  <nav>
+    <button onclick="go('kursy')">Moje kursy</button>
+    <button onclick="go('historia')">Historia</button>
+    <button onclick="go('ustawienia')">Ustawienia</button>
+    <button class="sec" onclick="location.reload()">Wyloguj</button>
+  </nav>
+  <div id="view"></div>
+</div>
+
+<script>
+// ====== HASŁO: zmień na własne ======
+const HASLO = "matura2026";
+
+const PRZEDMIOTY = {
+  "Matematyka": ["Funkcje","Równania","Geometria","Ciągi","Prawdopodobieństwo","Trygonometria","Pochodna"],
+  "Język angielski": ["Słownictwo","Gramatyka","Czytanie","Pisanie","Słuchanie"],
+  "Język polski": ["Lektury","Wypracowanie","Gramatyka","Interpretacja tekstu","Środki stylistyczne"],
+  "Informatyka": ["Algorytmy","Python","Bazy danych","Systemy operacyjne","Sieci komputerowe","HTML i CSS"]
+};
+
+const KLUCZ = "trening_dane_v1";
+let dane = JSON.parse(localStorage.getItem(KLUCZ) || "null") || {
+  ustawienia: { kolor: "#457b9d", rozmiar: 16, ciemny: false, anim: "pelna" },
+  kursy: [],
+  historia: []
+};
+let odpowiedziono = false;
+
+function zapisz(){ localStorage.setItem(KLUCZ, JSON.stringify(dane)); }
+function esc(s){ return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function V(h){ document.getElementById("view").innerHTML = h; }
+function kursPo(id){ return dane.kursy.find(k => k.id === id); }
+
+function zaloguj(){
+  if (document.getElementById("pass").value === HASLO){
+    document.getElementById("login").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+    zastosujUstawienia();
+    go("kursy");
+  } else {
+    document.getElementById("passErr").classList.remove("hidden");
+  }
+}
+
+function zastosujUstawienia(){
+  const u = dane.ustawienia, r = document.documentElement.style;
+  r.setProperty("--main", u.kolor);
+  r.setProperty("--size", u.rozmiar + "px");
+  document.body.classList.toggle("dark", u.ciemny);
+  document.body.classList.toggle("noanim", u.anim === "brak");
+}
+
+function go(widok, a, b){
+  ({
+    kursy: () => renderKursy(),
+    nowy: () => renderNowy(),
+    kurs: () => renderKurs(a),
+    dodaj: () => renderDodaj(a),
+    rozwiazuj: () => renderRozwiazuj(a, b || 0),
+    historia: () => renderHistoria(),
+    ustawienia: () => renderUstawienia()
+  })[widok]();
+  window.scrollTo(0, 0);
+}
+
+// ====== MOJE KURSY ======
+function renderKursy(){
+  let h = `<div class="row" style="justify-content:space-between">
+    <h2>Moje kursy</h2><button onclick="go('nowy')">+ Nowy kurs</button></div>`;
+  if (!dane.kursy.length) h += `<p class="muted">Nie masz jeszcze kursów. Dodaj pierwszy.</p>`;
+  dane.kursy.forEach(k => {
+    h += `<div class="card" style="cursor:pointer" onclick="go('kurs','${k.id}')">
+      <b>${esc(k.przedmiot)}</b> – ${esc(k.temat)}
+      <div class="muted">Zadań: ${k.zadania.length}</div></div>`;
+  });
+  V(h);
+}
+
+function renderNowy(){
+  const opcje = Object.keys(PRZEDMIOTY).map(p => `<option>${esc(p)}</option>`).join("");
+  V(`<div class="card"><h2>Nowy kurs</h2>
+    <label>Przedmiot</label>
+    <select id="przedm" onchange="odswiezTematy()">${opcje}</select>
+    <label>Zagadnienie (wybierz z listy lub wpisz własne)</label>
+    <input id="temat" list="tematy" placeholder="np. Pochodna">
+    <datalist id="tematy"></datalist>
+    <div class="row">
+      <button onclick="zapiszKurs()">Utwórz</button>
+      <button class="sec" onclick="go('kursy')">Anuluj</button>
+    </div></div>`);
+  odswiezTematy();
+}
+
+function odswiezTematy(){
+  const p = document.getElementById("przedm").value;
+  document.getElementById("tematy").innerHTML =
+    PRZEDMIOTY[p].map(t => `<option value="${esc(t)}">`).join("");
+}
+
+function zapiszKurs(){
+  const p = document.getElementById("przedm").value;
+  const t = document.getElementById("temat").value.trim();
+  if (!t) return alert("Wpisz zagadnienie");
+  dane.kursy.push({ id: Date.now().toString(), przedmiot: p, temat: t, zadania: [] });
+  zapisz();
+  go("kursy");
+}
+
+function renderKurs(id){
+  const k = kursPo(id);
+  if (!k) return go("kursy");
+  V(`<div class="card"><h2>${esc(k.przedmiot)} – ${esc(k.temat)}</h2>
+    <p class="muted">Zadań w kursie: ${k.zadania.length}</p>
+    <div class="row">
+      <button onclick="go('rozwiazuj','${id}',0)" ${k.zadania.length ? "" : "disabled"}>Rozwiązuj zadania</button>
+      <button class="sec" onclick="go('dodaj','${id}')">Dodaj treść</button>
+      <button class="sec" onclick="go('kursy')">Wstecz</button>
+      <button class="danger" onclick="usunKurs('${id}')">Usuń kurs</button>
+    </div></div>`);
+}
+
+function usunKurs(id){
+  if (!confirm("Usunąć ten kurs?")) return;
+  dane.kursy = dane.kursy.filter(k => k.id !== id);
+  zapisz();
+  go("kursy");
+}
+
+// ====== DODAJ TREŚĆ ======
+function renderDodaj(id){
+  V(`<div class="card"><h2>Dodaj treść</h2>
+    <p class="muted">Wklej zadania w formacie JSON (tablica). Każde zadanie ma tresc, odpowiedz i wyjasnienie:</p>
+    <pre class="muted" style="white-space:pre-wrap">[
+  {"tresc": "Treść zadania", "odpowiedz": "B", "wyjasnienie": "Dlaczego B..."},
+  {"tresc": "Kolejne zadanie", "odpowiedz": "42", "wyjasnienie": "Krok po kroku..."}
+]</pre>
+    <textarea id="json" placeholder="Wklej tutaj"></textarea>
+    <div class="row">
+      <button onclick="zapiszZadania('${id}')">Zapisz zadania</button>
+      <button class="sec" onclick="go('kurs','${id}')">Wstecz</button>
+    </div></div>`);
+}
+
+function zapiszZadania(id){
+  const k = kursPo(id);
+  let nowe;
+  try { nowe = JSON.parse(document.getElementById("json").value); }
+  catch (e) { return alert("Błąd w formacie JSON:\n" + e.message); }
+  if (!Array.isArray(nowe)) return alert("Treść musi być tablicą, czyli zaczynać się od [");
+  const zle = nowe.findIndex(z => !z.tresc || z.odpowiedz === undefined);
+  if (zle >= 0) return alert(`Zadanie nr ${zle + 1} nie ma pola "tresc" albo "odpowiedz"`);
+  k.zadania.push(...nowe.map(z => ({
+    tresc: z.tresc,
+    odpowiedz: String(z.odpowiedz),
+    wyjasnienie: z.wyjasnienie || ""
+  })));
+  zapisz();
+  alert(`Dodano ${nowe.length} zadań`);
+  go("kurs", id);
+}
+
+// ====== ROZWIĄZYWANIE ======
+function renderRozwiazuj(id, i){
+  const k = kursPo(id);
+  if (!k || !k.zadania.length) return go("kurs", id);
+  if (i >= k.zadania.length){
+    V(`<div class="card"><h2>Koniec kursu!</h2>
+      <p>Rozwiązałeś wszystkie zadania.</p>
+      <button onclick="go('kurs','${id}')">Wróć do kursu</button></div>`);
+    return;
+  }
+  odpowiedziono = false;
+  const z = k.zadania[i];
+  V(`<div class="card">
+    <div class="muted">${esc(k.przedmiot)} – ${esc(k.temat)} · zadanie ${i + 1} z ${k.zadania.length}</div>
+    <div class="task" style="margin:12px 0">${esc(z.tresc)}</div>
+    <input id="odp" placeholder="Twoja odpowiedź">
+    <div class="row">
+      <button onclick="sprawdzOdp('${id}',${i})">Odpowiedz</button>
+      <button class="sec" onclick="document.getElementById('wyj').classList.toggle('hidden')">Wyjaśnienie</button>
+      <button class="sec" onclick="go('rozwiazuj','${id}',${i + 1})">Następne</button>
+    </div>
+    <div id="wynik" style="margin-top:12px"></div>
+    <div id="wyj" class="card hidden wyj" style="margin-top:12px">${esc(z.wyjasnienie || "Brak wyjaśnienia")}</div>
+  </div>`);
+}
+
+function sprawdzOdp(id, i){
+  if (odpowiedziono) return;
+  odpowiedziono = true;
+  const k = kursPo(id), z = k.zadania[i];
+  const podana = document.getElementById("odp").value.trim();
+  const dobra = podana.toLowerCase() === z.odpowiedz.trim().toLowerCase();
+
+  dane.historia.unshift({
+    data: new Date().toLocaleString("pl-PL"),
+    przedmiot: k.przedmiot, kurs: k.temat, zadanie: i + 1,
+    podana, poprawna: z.odpowiedz, dobra
+  });
+  dane.historia = dane.historia.slice(0, 500);
+  zapisz();
+
+  document.getElementById("wynik").innerHTML = dobra
+    ? `<span class="ok">✓ Dobrze!</span>`
+    : `<span class="bad">✗ Nie do końca.</span> Poprawna odpowiedź: <b>${esc(z.odpowiedz)}</b>`;
+}
+
+// ====== HISTORIA ======
+function renderHistoria(){
+  let h = `<div class="row" style="justify-content:space-between">
+    <h2>Historia</h2><button class="sec" onclick="wyczyscHistorie()">Wyczyść</button></div>`;
+  if (!dane.historia.length) h += `<p class="muted">Brak historii.</p>`;
+  dane.historia.forEach(x => {
+    h += `<div class="card">
+      <span class="${x.dobra ? 'ok' : 'bad'}">${x.dobra ? '✓' : '✗'}</span>
+      ${esc(x.przedmiot)} – ${esc(x.kurs)}, zadanie ${x.zadanie}
+      <div class="muted">${esc(x.data)} · Twoja odpowiedź: ${esc(x.podana)} · poprawna: ${esc(x.poprawna)}</div>
+    </div>`;
+  });
+  V(h);
+}
+
+function wyczyscHistorie(){
+  if (!confirm("Wyczyścić całą historię?")) return;
+  dane.historia = [];
+  zapisz();
+  renderHistoria();
+}
+
+// ====== USTAWIENIA ======
+function renderUstawienia(){
+  const u = dane.ustawienia;
+  V(`<div class="card"><h2>Ustawienia</h2>
+    <label>Kolor główny</label>
+    <input type="color" id="s_kolor" value="${u.kolor}">
+    <label>Wielkość czcionki: <span id="s_r_val">${u.rozmiar}</span> px</label>
+    <input type="range" id="s_rozmiar" min="12" max="24" value="${u.rozmiar}"
+      oninput="document.getElementById('s_r_val').textContent=this.value">
+    <label><input type="checkbox" id="s_ciemny" ${u.ciemny ? "checked" : ""} style="width:auto"> Ciemny motyw</label>
+    <label>Animacje</label>
+    <select id="s_anim">
+      <option value="pelna" ${u.anim === "pelna" ? "selected" : ""}>Włączone</option>
+      <option value="brak" ${u.anim === "brak" ? "selected" : ""}>Wyłączone</option>
+    </select>
+    <div class="row"><button onclick="zapiszUstawienia()">Zapisz</button></div>
+  </div>`);
+}
+
+function zapiszUstawienia(){
+  dane.ustawienia = {
+    kolor: document.getElementById("s_kolor").value,
+    rozmiar: +document.getElementById("s_rozmiar").value,
+    ciemny: document.getElementById("s_ciemny").checked,
+    anim: document.getElementById("s_anim").value
+  };
+  zapisz();
+  zastosujUstawienia();
+  alert("Zapisano");
+}
+
+if ("serviceWorker" in navigator) { navigator.serviceWorker.register("sw.js"); }
+</script>
+</body>
+</html>
