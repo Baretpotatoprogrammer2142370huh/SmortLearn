@@ -1,4 +1,4 @@
-const CACHE = "trening-v2";
+const CACHE = "trening-v4";
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll([
     "./", "./index.html", "./manifest.json", "./icon-192.png", "./icon-512.png"
